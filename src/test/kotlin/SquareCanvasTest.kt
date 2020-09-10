@@ -1,7 +1,9 @@
 package io.github.rusticflare.squarecanvas
 
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.core.spec.tempfile
+import io.kotest.data.forAll
+import io.kotest.data.row
+import io.kotest.engine.spec.tempfile
 import io.kotest.matchers.doubles.shouldBeExactly
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -12,13 +14,21 @@ import kotlin.math.abs
 
 class SquareCanvasTest : FunSpec({
 
-    val source = javaClass.getResource("/source.jpg").toFile()
-    val target = tempfile(suffix = ".jpg")
-    val expected = javaClass.getResource("/expected.jpg").toFile()
+    context("Test squareForInstagram") {
+        forAll(
+            row("small"),
+            row("big"),
+        ) { folder ->
+            test("For a $folder image") {
+                val source = javaClass.getResource("/$folder/source.jpg").toFile()
+                val target = tempfile(suffix = ".jpg")
+                val expected = javaClass.getResource("/$folder/expected.jpg").toFile()
 
-    test("Test square canvas") {
-        squareCanvas(source, target)
-        target differenceTo expected shouldBeExactly 0.0
+                source.squareForInstagram(target)
+
+                target differenceTo expected shouldBeExactly 0.0
+            }
+        }
     }
 })
 
