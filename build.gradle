@@ -1,5 +1,6 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.4.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id "maven-publish"
 }
 
 group 'io.github.rusticflare'
@@ -22,4 +23,30 @@ compileTestKotlin.kotlinOptions.jvmTarget = "1.8"
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'io.github.rusticflare'
+            artifactId = 'square-canvas'
+            version = "0.0.1"
+            from components.java
+
+            pom {
+                name = 'Square Canvas'
+                description = 'A library for making square photos'
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/RusticFlare/square-canvas"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
